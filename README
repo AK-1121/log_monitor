@@ -1,0 +1,4 @@
+A small script to observe changes in an error log file of some service (*NIX).
+In case of appearences of new data in log file script sends email with information from log file.
+
+You have to set up password from your email box in environment var before running script.
