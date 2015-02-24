@@ -5,11 +5,9 @@
 import datetime
 import os
 import smtplib
-import socket
 import subprocess
 import time
 
-from email.mime.text import MIMEText
 
 ERR_LOG = "/var/log/nginx/error.log"  # Log file of service which we observe.
 FROM_MAIL_SERV = "mail.ru"
@@ -43,7 +41,7 @@ while True:
     print("hash data: ", hash(data))
     print("hash prev: ", hash(previous_data))
 
-    # Check if there are any new information in error.log:    
+    # Check if there are any new information in error.log:
     if (previous_data != data and data) or not err_mess_was_sent:
         err_mess_was_sent = False
 
@@ -53,25 +51,26 @@ while True:
             print("smtp_reply: ", smtp_reply)
             try:
                 smtp_login = smtp.login(LOGIN, PASS)
-                print ("smtp login: ", smtp_login)
+                print("smtp login: ", smtp_login)
                 log_file_data = ("\n" + "="*30 + str(datetime.datetime.now()) +
                                  "\nemail message:\n" + str(data))
                 try:
-                    smtp.sendmail(LOGIN + "@" + FROM_MAIL_SERV, TO_MAIL, 
+                    smtp.sendmail(LOGIN + "@" + FROM_MAIL_SERV, TO_MAIL,
                                   log_file_data)
                     print("Mail was sent.")
-                    err_mess_was_sent = True 
+                    err_mess_was_sent = True
                 except:
-                    log_file_data = ("\n" + "="*30 + str(datetime.datetime.now()) + 
+                    log_file_data = ("\n" + "="*30 +
+                                     str(datetime.datetime.now()) +
                                      "\nSMTP sending mail error")
             except:
                 print("SMTP login to mailbox error.")
-                log_file_data = ("\n" + "="*30 + str(datetime.datetime.now()) + 
+                log_file_data = ("\n" + "="*30 + str(datetime.datetime.now()) +
                                  "\nSMTP login to mailbox error")
             smtp.quit()
-        except: 
+        except:
             print("SMTP connection error.")
-            log_file_data = ("\n" + "="*30 + str(datetime.datetime.now()) + 
+            log_file_data = ("\n" + "="*30 + str(datetime.datetime.now()) +
                              "\nSMTP connection error")
 
         write_to_file(LOG_FILE, log_file_data)
